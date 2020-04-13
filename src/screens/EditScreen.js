@@ -11,40 +11,25 @@ import {
 
 import { Context } from '../context/BlogContext';
 import { Feather } from '@expo/vector-icons';
+import BlogPostForm from '../components/BlogPostForm';
 
 const EditScreen = ({ navigation }) => {
-  const { state, updateBlogpost, deleteBlogpost } = useContext(Context);
+  const { state, editBlogpost } = useContext(Context);
   const id = navigation.getParam('id');
 
   const blogPost = state.find((blogPost) => {
     return blogPost.id === navigation.getParam('id');
   });
-  const [title, setTitle] = useState(blogPost.title);
-  const [content, setContent] = useState(blogPost.content);
 
   return (
-    <>
-      <Text style={styles.label}>Enter Title</Text>
-      <TextInput
-        style={styles.input}
-        value={title}
-        onChangeText={(text) => setTitle(text)}
-      />
-      <Text style={styles.label}>Enter Content</Text>
-      <TextInput
-        style={styles.input}
-        value={content}
-        onChangeText={(text) => setContent(text)}
-      />
-      <Button
-        title="Update blog post"
-        onPress={() => {
-          updateBlogpost(title, content, () => {
-            navigation.navigate('Index');
-          });
-        }}
-      />
-    </>
+    <BlogPostForm
+      initialValues={{ title: blogPost.title, content: blogPost.content }}
+      onSubmit={(title, content) => {
+        editBlogpost(id, title, content, () => {
+          navigation.pop();
+        });
+      }}
+    />
   );
 };
 

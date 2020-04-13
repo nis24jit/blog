@@ -2,6 +2,22 @@ import createDataContext from './createDataContext';
 
 const blogReducer = (state, action) => {
   switch (action.type) {
+    case 'edit_blogpost': {
+      console.log('edit');
+      return state.map((blogPost) => {
+        if (blogPost.id === action.payload.id) {
+          return action.payload;
+        } else {
+          return blogPost;
+        }
+      });
+    }
+
+    // case 'delete_blogpost':
+    //   return state.filter((blog) => {
+    //     return blog.id !== action.payload;
+    //   });
+
     case 'add_blogpost':
       console.log('in here');
       return [
@@ -31,14 +47,15 @@ const deleteBlogpost = (dispatch) => {
   };
 };
 
-const updateBlogpost = (dispatch) => {
-  return (id) => {
-    dispatch({ type: 'update_blogpost', payload: { title, content } });
+const editBlogpost = (dispatch) => {
+  return (id, title, content, callback) => {
+    dispatch({ type: 'edit_blogpost', payload: { id, title, content } });
+    callback();
   };
 };
 
 export const { Context, Provider } = createDataContext(
   blogReducer,
-  { addBlogpost, deleteBlogpost, updateBlogpost },
+  { addBlogpost, deleteBlogpost, editBlogpost },
   [{ title: 'Test', content: 'asas', id: 1 }]
 );
